@@ -1,0 +1,76 @@
+﻿@page "/project/{ProjectId:guid}"
+
+@using BlazorBootstrap
+@using Microsoft.AspNetCore.Authorization
+@using TaskManager.Presentation.Components.Modals
+@using TaskManager.Presentation.Components.ProjectDetailedView
+@inherits AppComponentBase
+@attribute [Authorize]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<title>Project Detailed View = @_projectTitle</title>
+
+<PageTitle>@_projectTitle</PageTitle>
+
+<ProjectDetailsHeader 
+    ProjectName="@_projectTitle"
+    ProjectDescription="@_projectDescription"
+    TotalTodoItems="@_totalTodoItems"
+    CompleteTodoItems="@_completeTodoItems"
+    IsLoading="@_isLoading"
+    PercentComplete ="@_percentComplete"
+    OnShowEditProjectModalClick="OnShowEditProjectModalClick">
+</ProjectDetailsHeader>
+
+
+@if (_isLoading)
+{
+    <body>
+        <div class="container page-center">
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Primary" />
+            </div>
+        </div>
+    </body>
+
+}
+else if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div style="color: red; padding: 10px; border: 1px solid red; margin: 10px 0;">
+        <strong>Error:</strong> @_errorMessage
+        <br />
+        <NavLink href="/login">Go to Login</NavLink>
+    </div>
+}
+else
+{
+    <div class="d-flex mb-3 gap-2">
+   
+        <input type="search"
+               class="form-control flex-grow-1"
+               placeholder="Search Tasks..."
+               @bind="_todoItemFilter"
+               @bind:event="oninput" 
+               aria-label="TaskSearchBar" />
+
+        <Button Type="@ButtonType.Button" @onclick="OnAddTaskModalClick" aria-label="AddTaskButton">
+            <Icon Name="IconName.PlusCircleFill" Size="IconSize.x4" />
+        </Button>
+        
+    </div>
+    <hr />
+                                    
+    <TodoItemGrid FilteredTodoItems="FilteredTodoItems"
+                  UpdateTodoItemStatus="UpdateTodoItemStatus"
+                  OnShowDetailsModalClick="OnShowDetailsModalClick"
+                  OnShowEditModalClick="OnShowEditModalClick"
+                  OnShowDeleteModalClick="OnShowDeleteModalClick" />
+}
+
+
+<AddTodoItemModal @ref="_addTodoItemModal" ProjectId="ProjectId" OnShowNewAssigneeModalClick="OpenNewAssigneeModalFromAdd"/>
+<DeleteTodoItemModal @ref="_deleteTodoModal" ProjectId="ProjectId"> </DeleteTodoItemModal>
+<EditTodoItemModal @ref="_editTodoItemModal" ProjectId="ProjectId" OnShowNewAssigneeModalClick="OpenNewAssigneeModalFromEdit"/>
+<TodoItemDetailsModal @ref="_detailsModal" OnEditClick="OnEditFromDetailsClick" IsOwner="true"/>
+<NewAssigneeModal @ref="_newAssigneeModal" OnCanceled="OnAssigneeModalClosed" OnAssigneeSaved="OnAssigneeModalClosed"/>
+<EditProjectModal @ref="_editProjectModal" ProjectId="ProjectId"/>

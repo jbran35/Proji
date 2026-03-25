@@ -1,0 +1,49 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Application.Projects.DTOs
+@using TaskManager.Presentation.Components.Tiles
+
+@if (IsLoading)
+{
+    <body>
+        <div class="container page-center">
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Primary" />
+            </div>
+        </div>
+    </body>
+
+}
+else if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div style="color: red; padding: 10px; border: 1px solid red; margin: 10px 0;">
+        <strong>Error:</strong> @ErrorMessage
+        <br />
+        <NavLink href="/login">Go to Login</NavLink>
+    </div>
+}
+else if (!Projects.Any())
+{
+    <hr class="curved-line" />
+    <p>No projects found.</p>
+}
+else
+{
+    @if (!IsLoading)
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xxxl-6 g-4">
+            @foreach (var proj in Projects)
+            {
+                <div class="col">
+                    <ProjectTile project="@proj"></ProjectTile>
+                </div>
+            }
+        </div>
+    }
+}
+
+@code {
+
+    [Parameter] public IEnumerable<ProjectTileDto> Projects { get; set; } = []; 
+    [Parameter] public string ErrorMessage { get; set; } = string.Empty; 
+    [Parameter] public bool IsLoading { get; set; }
+}

@@ -1,0 +1,17 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Presentation.Components.Pages
+@inherits AppComponentBase
+
+
+<Modal @ref="_editTodoItemModal" Title="Edit Task" Size="ModalSize.Large">
+    <BodyTemplate>
+        <EditTodoItem TodoItem="@TodoItem" @ref="_editTodoItemForm" 
+                  OnShowNewAssigneeModalClick="OnShowNewAssigneeModal"
+                  OnRestoreEditTodoItemModal="RestoreModal"
+                  ProjectId="ProjectId"> </EditTodoItem>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideEditTodoItemModalClick">Close</Button>
+        <Button Color="ButtonColor.Dark" @onclick="OnUpdateTodoItemModalClick" Disabled="@_isUpdateClicked" >Update</Button>
+    </FooterTemplate>
+</Modal>

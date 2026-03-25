@@ -1,0 +1,80 @@
+﻿@using BlazorBootstrap
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using TaskManager.Application.TodoItems.DTOs
+@using TaskManager.Domain.Enums
+
+
+<div class="table-responsive w-100 align-content-center">
+
+    <QuickGrid Items="@FilteredTodoItems" Pagination="@_pagination" Virtualize="false">
+
+        <TemplateColumn Align="Align.Center" Sortable="true">
+            <HeaderTemplate>
+
+                <div class="d-flex justify-content-center w-100">
+                    <Icon Name="IconName.Check2Circle" Size="IconSize.x4"/>
+                </div>
+
+            </HeaderTemplate>
+
+            <ChildContent Context="task">
+
+                <Button Type="@ButtonType.Button" Class="p-0 border-0 shadow-none" @onclick="@(() => UpdateTodoItemStatus.InvokeAsync(task.Id))" aria-label="UpdateTaskStatusButton">
+
+                    @if (task.Status == Status.Complete)
+                    {
+                        <Icon Name="IconName.CheckCircleFill" Size="IconSize.x5" Color="IconColor.Dark" />
+                    }
+                    else
+                    {
+                        <Icon Name="IconName.Circle" Size="IconSize.x5" Color="IconColor.Secondary" />
+                    }
+
+                </Button>
+            </ChildContent>
+        </TemplateColumn>
+
+        <PropertyColumn Property="@(t => t.Title)" Title="Task Name" Sortable="true" Align="Align.Center" />
+        <PropertyColumn Property="@(t => t.Priority)" Title="Priority" Sortable="true" Align="Align.Left" />
+        <PropertyColumn Property="@(t => t.AssigneeName)" Title="Assignee" Sortable="true" Align="Align.Left" />
+        <PropertyColumn Property="@(t => t.DueDate)" Title="Due Date" Sortable="true" Format="d" Align="Align.Left"/>
+       <PropertyColumn Property="@(t => t.CreatedOn)" Title="Created On" Sortable="true" Format="d" Align="Align.Left"/>
+        <PropertyColumn Property="@(t => t.Status)" Title="Status" Sortable="true" />
+
+        <TemplateColumn Context="task" Title="Actions" Align="Align.Center">
+
+            <Button Type="@ButtonType.Link" @onclick="@(() => OnShowDetailsModalClick.InvokeAsync(task))" aria-label="ShowTaskDetailsButton">
+                <Icon Name="IconName.EyeFill" Size="IconSize.x5"></Icon>
+            </Button>
+
+            <Button Type="@ButtonType.Link" @onclick="@(() => OnShowEditModalClick.InvokeAsync(task))" aria-label="EditTaskButton">
+                <Icon Name="IconName.PencilSquare" Size="IconSize.x5"></Icon>
+            </Button>
+
+            <Button Type="@ButtonType.Link" @onclick="@(() => OnShowDeleteModalClick.InvokeAsync(task))" aria-label="DeleteTaskButton">
+                <Icon Name="IconName.Trash3Fill" Size="IconSize.x5"></Icon>
+            </Button>
+
+        </TemplateColumn>
+    </QuickGrid>
+
+    @if (FilteredTodoItems is null || !FilteredTodoItems.Any())
+    {
+        <p style="text-align: center">No Tasks Found.</p>
+    }
+</div>
+
+<Paginator State="_pagination" />
+
+@code{
+
+    #region Parameters
+    [Parameter] public IQueryable<TodoItemEntry>? FilteredTodoItems { get; set; }
+    [Parameter] public EventCallback<Guid> UpdateTodoItemStatus { get; set; }
+    [Parameter] public EventCallback<TodoItemEntry> OnShowDetailsModalClick { get; set; }
+    [Parameter] public EventCallback<TodoItemEntry> OnShowEditModalClick { get; set; }
+    [Parameter] public EventCallback<TodoItemEntry> OnShowDeleteModalClick { get; set; }
+    #endregion
+
+    private PaginationState _pagination = new PaginationState { ItemsPerPage = 10 };
+}

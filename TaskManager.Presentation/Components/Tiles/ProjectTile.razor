@@ -1,0 +1,39 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Presentation.Components.Modals
+@rendermode InteractiveServer
+
+    <Card Class="h-100 shadow-sm" @onclick="NavToProjectDetails">
+        <div class="project-card">
+
+    <CardBody Class="d-flex flex-column align-items-center justify-content-center">
+        <h5 class="card-title mb-4">@Project.Title</h5>
+
+        <ProgressGraph PercentComplete="@CalculatedProgress" IsTile="true"></ProgressGraph>
+        <div class="mt-3 text-muted">
+            <small>@Project.CompleteTodoItemCount / @Project.TotalTodoItemCount Tasks</small>
+         
+        <div class="position-absolute bottom-0 end-0 m-2" @onclick:stopPropagation="true">
+
+        <div class="dropup position-absolute bottom-0 end-0 m-2">
+        
+        <button id="ProjectOptions-@Project.Id" aria-label="ProjectOptions" class="btn btn-lg border-0 p-0" type="button" 
+        data-bs-toggle="dropdown" aria-expanded="false">
+            <Icon Name="IconName.ThreeDotsVertical"></Icon>
+        </button>
+
+        <ul class="dropdown-menu">
+            <li><button class="dropdown-item" type="button" @onclick="OnShowEditProjectModalClick">Edit</button></li>
+            <li><button class="dropdown-item" type="button" @onclick="OnShowCompleteProjectModalClick">Complete</button></li>
+            <li><button class="dropdown-item" type="button" @onclick="OnShowDeleteProjectModalClick">Delete</button></li>
+        </ul>
+    </div>
+            </div>        
+        </div>
+
+    </CardBody>
+    </div>
+</Card>
+
+<EditProjectModal @ref="_editModal" projectId="@Project.Id"> </EditProjectModal>
+<DeleteProjectModal @ref="_deleteModal" ProjectId="@Project.Id" ></DeleteProjectModal>
+<CompleteProjectModal @ref="_completeModal" ProjectId="@Project.Id" > </CompleteProjectModal>

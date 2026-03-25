@@ -1,0 +1,36 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Application.Projects.DTOs
+@using TaskManager.Presentation.Components.Pages
+@inherits AppComponentBase
+
+<Modal @ref="_addProjectModal" Title="Add Project"  Size="ModalSize.Large">
+    <BodyTemplate>
+        <NewProject @ref="_addProjectForm"></NewProject>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button id="CancelButton" Color="ButtonColor.Secondary" @onclick="OnHideAddProjectModalClick">Cancel</Button>
+        <Button id="CreateProjectButton" Color="ButtonColor.Dark" @onclick="OnCreateProjectClick" Disabled="@_createButtonClicked">Create</Button>
+    </FooterTemplate>
+</Modal>
+
+
+@code{
+
+    [Parameter] public EventCallback<ProjectTileDto> OnProjectCreated { get; set; } //To prompt a refresh the user's tile list
+
+    private bool _createButtonClicked; 
+    private Modal _addProjectModal = new Modal();
+    private NewProject _addProjectForm = default!;
+
+    public async Task OnShowAddProjectModalClick() => await _addProjectModal.ShowAsync();
+
+    private async Task OnHideAddProjectModalClick() =>  await _addProjectModal.HideAsync();
+
+    private async Task OnCreateProjectClick()
+    {
+        _createButtonClicked = true; // Disables the button while processing, so multi-clicks don't initiate the same action. 
+        await _addProjectForm.CreateProject();
+        await _addProjectModal.HideAsync();
+        _createButtonClicked = false;
+    }
+}

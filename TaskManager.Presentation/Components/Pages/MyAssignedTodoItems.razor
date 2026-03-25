@@ -1,0 +1,125 @@
+﻿@page "/mytasks"
+@using BlazorBootstrap
+@using TaskManager.Domain.Enums
+@using TaskManager.Presentation.Components.Modals
+@using Microsoft.AspNetCore.Components.QuickGrid
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inherits AppComponentBase
+
+<title>My Tasks - Tasks Assigned To Me</title>
+
+<PageTitle>My Tasks</PageTitle>
+
+<h3 style="text-align: center;"> My Tasks </h3>
+<hr />
+
+@if (_isLoading)
+{
+    <body>
+        <div class="container page-center">
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Primary" />
+            </div>
+        </div>
+    </body>
+}
+
+else if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div style="color: red; padding: 10px; border: 1px solid red; margin: 10px 0;">
+        <strong>Error:</strong> @_errorMessage
+        <br />
+        <NavLink href="/login">Go to Login</NavLink>
+    </div>
+}
+else if (_todoItemList is null || !_todoItemList.Any())
+{
+    <h2 Alight="Center"> Uh oh... It doesn't look like you have been assigned any tasks yet!' </h2>
+}
+else
+{
+
+    <div class="d-flex mb-3 gap-2">
+        <input type="search"
+               class="form-control flex-grow-1"
+               placeholder="Search Tasks..."
+               @bind="_todoItemFilter"
+               @bind:event="oninput" 
+               />
+
+    </div>
+    <hr />
+
+    @* Task Table/Grid *@
+    <div class="table-responsive w-100 align-content-center">
+
+        <QuickGrid Items="@FilteredTodoItems" Pagination="@_pagination" Virtualize="false">
+
+            <TemplateColumn Context="todoItem" Align="Align.Center">
+                <HeaderTemplate>
+
+                    <div class="d-flex justify-content-center w-100">
+                        <Icon Name="IconName.Check2Circle" Size="IconSize.x4" />
+                    </div>
+
+                </HeaderTemplate>
+
+                <ChildContent>
+
+                    <Button Type="@ButtonType.Button"
+                            Class="p-0 border-0 shadow-none"
+                            @onclick="@(() => UpdateCompletionStatus(todoItem.Id))"
+                            aria-label="UpdateTaskCompletionStatus">
+
+                        @if (todoItem.Status == Status.Complete)
+                        {
+                            <Icon Name="IconName.CheckCircleFill" Size="IconSize.x5" Color="IconColor.Dark" />
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.Circle" Size="IconSize.x5" Color="IconColor.Secondary" />
+                        }
+
+                    </Button>
+                </ChildContent>
+
+            </TemplateColumn>
+
+            <PropertyColumn Property="@(t => t.Title)" Title="Task Name" Sortable="true" Align="Align.Center" />
+            <PropertyColumn Property="@(t => t.ProjectTitle)" Title="Project" Sortable="true" Align="Align.Center" />
+            <PropertyColumn Property="@(t => t.OwnerName)" Title="Assigner" Sortable="true" Align="Align.Center" />
+            <PropertyColumn Property="@(t => t.Priority)" Title="Priority" Sortable="true" Align="Align.Center" />
+            <TemplateColumn Title="Due Date" Sortable="true" Context="todoItem" Align="Align.Center">
+               
+                @if (todoItem.DueDate.HasValue)
+                {
+                    @todoItem.DueDate.Value.ToString("d")
+                }
+                else
+                {
+                    <span>&mdash;</span>
+                }
+
+            </TemplateColumn>
+            <PropertyColumn Property="@(t => t.Status)" Title="Status" Sortable="true" Align="Align.Center" />
+
+
+            <TemplateColumn Context="task" Title="Actions" Align="Align.Center">
+
+                <Button Type="@ButtonType.Link" @onclick="@(() => OnShowTodoItemDetails(task))" aria-label="ViewTaskDetailsButton">
+                    <Icon Name="IconName.EyeFill" Size="IconSize.x5"></Icon>
+                </Button>
+            </TemplateColumn>
+
+        </QuickGrid>
+
+
+        @if (_todoItemList is null || !_todoItemList.Any())
+        {
+            <p style="text-align: center">No Tasks Found.</p>
+
+        }
+    </div>
+    <Paginator State="_pagination" />
+    <TodoItemDetailsModal @ref="_detailsModal" IsOwner="false"> </TodoItemDetailsModal>
+}

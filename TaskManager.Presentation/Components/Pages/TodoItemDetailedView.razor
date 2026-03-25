@@ -1,0 +1,54 @@
+﻿@page "/project/taskdetails/{TaskId:guid}"
+@using BlazorBootstrap
+@rendermode InteractiveServer
+@inherits AppComponentBase
+
+<title> Task: Detailed View</title>
+
+<p> Task Name </p>
+
+<div class="mb-3">
+    <input type="text"
+            class="form-control"
+            placeholder="My New Task..."
+            @bind="Title"
+            disabled=disabled
+            />
+</div>
+
+<p>Desscription:</p>
+
+<div class="mb-3">
+    <TextAreaInput @bind-value="@Description" Rows="3" Placeholder="Enter Task Description" Disabled="true" />
+</div>
+
+<p>Assignee:</p>
+
+    <div class="mb-3">
+    <input type="text"
+            class="form-control"
+            placeholder="Assignee"
+            @bind="Assignee"
+            disabled=disabled
+            />
+</div>
+
+<p>Priority:</p>
+    <input type="text"
+            class="form-control"
+            placeholder="Priority"
+            @bind="Priority"
+            disabled=disabled
+            />
+<br />
+
+<p>Due Date:</p>
+
+<div class="mb-3">
+    <input type="date"
+            class="form-control"
+            @bind="DueDate"
+            disabled=disabled/>
+</div>
+
+<br />

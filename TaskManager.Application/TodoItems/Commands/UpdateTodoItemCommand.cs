@@ -1,0 +1,42 @@
+﻿using MediatR;
+using TaskManager.Application.Common;
+using TaskManager.Application.Interfaces;
+using TaskManager.Application.TodoItems.DTOs;
+using TaskManager.Domain.Common;
+using TaskManager.Domain.Enums;
+
+namespace TaskManager.Application.TodoItems.Commands
+{
+    /// <summary>
+    /// A command representing a request to update the details for a Todo Item. 
+    /// </summary>
+    /// <param name="UserId"></param>
+    /// <param name="ProjectId"></param>
+    /// <param name="TodoItemId"></param>
+    /// <param name="AssigneeId"></param>
+    /// <param name="NewTitle"></param>
+    /// <param name="NewDescription"></param>
+    /// <param name="NewPriority"></param>
+    /// <param name="NewDueDate"></param>
+    public record UpdateTodoItemCommand(
+        Guid UserId,
+        Guid ProjectId,
+        Guid TodoItemId,
+        Guid? AssigneeId,
+
+        string? NewTitle,
+        string? NewDescription,
+
+        Priority? NewPriority,
+        DateTime? NewDueDate
+        ) : IRequest<Result<TodoItemEntry>>, ICacheInvalidator
+    {
+        public string[] Keys => [.. GetKeys()];
+
+        private IEnumerable<string> GetKeys()
+        {
+            yield return CacheKeys.ProjectTiles(UserId);
+            yield return CacheKeys.ProjectDetailedViews(UserId, ProjectId); 
+        }
+    }
+}

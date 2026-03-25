@@ -1,0 +1,52 @@
+﻿@page "/mygroup"
+@using BlazorBootstrap
+@using TaskManager.Presentation.Components.Modals
+@using TaskManager.Presentation.Components.Tiles
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<title> My Group</title>
+
+
+<h3 style="text-align: center;"> My Group </h3>
+<hr />
+
+<div class="d-flex mb-3 gap-2">
+    <input type="search"
+           class="form-control flex-grow-1"
+           placeholder="Search Users..."
+           @bind="_assigneeFilter"
+           @bind:event="oninput" 
+           aria-label="SearchAssignees"
+           id="SearchAssignees"/>
+
+    <Button Type="@ButtonType.Button" @onclick="OnShowAssigneeModalAsync" aria-label="AddAssigneeButton">
+        <Icon Name="IconName.PlusCircleFill" Size="IconSize.x4" />
+    </Button>
+</div>
+@if (_isLoading)
+{
+    <body>
+        <div class="container page-center">
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Primary" />
+            </div>
+        </div>
+    </body>
+}
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 px-2">
+    @if (!FilteredAssignees.Any() && !_isLoading)
+    {
+       <p>No Assignees Found</p>
+    }
+    
+    @foreach (var assignee in FilteredAssignees)
+    {
+        <div class="col" @key="assignee.AssigneeId">
+            <AssigneeTile Connection="assignee">  </AssigneeTile>
+        </div>
+    }
+
+</div>
+
+<NewAssigneeModal @ref="_newAssigneeModal"> </NewAssigneeModal>

@@ -1,0 +1,29 @@
+﻿using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
+using TaskManager.Application.Common;
+using TaskManager.Application.Interfaces;
+using TaskManager.Application.TodoItems.Events;
+
+namespace TaskManager.Application.TodoItems.EventHandlers
+{
+    /// <summary>
+    /// When a todo item is deleted, this handler removes its assignee's Redis key (for their MyAssignedTodoItems) 
+    /// and notifies them so they see the deletion immediately.
+    /// </summary>
+    /// <param name="cache"></param>
+    /// <param name="updateNotificationService"></param>
+    public class AssignedTodoItemDeletedEventHandler(IDistributedCache cache, ITodoItemUpdateNotificationService updateNotificationService)
+        : INotificationHandler<AssignedTodoItemDeletedEvent>
+    {
+        private readonly IDistributedCache _cache = cache;
+        private readonly ITodoItemUpdateNotificationService _updateNotificationService = updateNotificationService;
+        public async Task Handle(AssignedTodoItemDeletedEvent notification, CancellationToken cancellationToken)
+        {
+            if (notification.AssigneeId is not null && notification.AssigneeId != Guid.Empty)
+            {
+                await _cache.RemoveAsync(CacheKeys.AssignedTodoItems(notification.AssigneeId.Value), CancellationToken.None);
+                await _updateNotificationService.NotifyTodoItemUpdated(notification.AssigneeId.Value.ToString());
+            }
+        }
+    }
+}

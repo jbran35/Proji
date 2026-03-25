@@ -1,0 +1,27 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Presentation.Enums
+
+<div class="dropdown">
+    <button id="SortOptions" class="btn p-0 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="ProjectSortMenuButton">
+        <Icon Name="IconName.ArrowDownUp" Size="IconSize.x3" />
+    </button>
+
+    <ul class="dropdown-menu">
+        <li><button type="button" class="dropdown-item" aria-label="Name - Ascending" @onclick="@(() => OnOptionClicked(SortOption.NameAsc))">Name (A-Z)</button></li>
+        <li><button type="button" class="dropdown-item" aria-label="Name - Descending" @onclick="@(() => OnOptionClicked(SortOption.NameDesc))">Name (Z-A)</button></li>
+        <li><button type="button" class="dropdown-item" aria-label="Progress - Ascending" @onclick="@(() => OnOptionClicked(SortOption.ProgressAsc))">Progress (0-100)</button></li>
+        <li><button type="button" class="dropdown-item" aria-label="Progress - Descending" @onclick="@(() => OnOptionClicked(SortOption.ProgressDesc))">Progress (100-0)</button></li>
+        <li><button type="button" class="dropdown-item" aria-label="Date Created - Ascending" @onclick="@(() => OnOptionClicked(SortOption.DateAsc))">Date (Newest - Oldest)</button></li>
+        <li><button type="button" class="dropdown-item" aria-label="Date Created - Descending" @onclick="@(() => OnOptionClicked(SortOption.DateDesc))">Date (Oldest - Newest)</button></li>
+    </ul>
+</div>
+
+@code {
+
+    [Parameter] public EventCallback<SortOption> OnSortChanged { get; set; }
+
+    private async Task OnOptionClicked(SortOption option)
+    {
+        await OnSortChanged.InvokeAsync(option);
+    }
+}

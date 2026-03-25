@@ -1,0 +1,35 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Presentation.Components.Pages
+@inherits AppComponentBase
+
+
+<Modal @ref="_editProjectModal" Title="Edit Project">
+    <BodyTemplate>
+        <EditProject @ref="_editProjectForm" ProjectId="@ProjectId"></EditProject>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideEditProjectModalClick" Type="@ButtonType.Button">Cancel</Button>
+        <Button Color="ButtonColor.Dark" Type="@ButtonType.Submit" @onclick="OnUpdateProjectClick" Disabled="@_isUpdateClicked">Update</Button>
+    </FooterTemplate>
+</Modal>
+
+@code {
+    
+    [Parameter] public required Guid ProjectId { get; set; }
+
+    private bool _isUpdateClicked;
+    private EditProject _editProjectForm = default!;
+    private Modal _editProjectModal = default!;
+
+    public async Task OnShowEditProjectModalClick() => await _editProjectModal.ShowAsync();
+
+    public async Task OnHideEditProjectModalClick() => await _editProjectModal.HideAsync();
+
+    private async Task OnUpdateProjectClick()
+    {
+        _isUpdateClicked = true; // Disables button to prevent multiple calls
+        await _editProjectForm.UpdateProject(); 
+        _isUpdateClicked = false;
+        await _editProjectModal.HideAsync(); 
+    }
+}

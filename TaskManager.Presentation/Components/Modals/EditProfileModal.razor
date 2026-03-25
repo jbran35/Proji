@@ -1,0 +1,52 @@
+﻿@rendermode InteractiveServer
+@using BlazorBootstrap
+@inherits AppComponentBase
+
+<Modal @ref="_editProfileModal"> 
+    <BodyTemplate>
+        <p>First Name:</p>
+        <EditForm id="edit-profile-form" Model="_request" OnValidSubmit="OnUpdateProfileClick">
+            <AntiforgeryToken />
+            <div class="mb-3">
+                <TextInput Class="form-control"
+                           @bind-value="_request.FirstName"
+                           name="FirstName"
+                           Disabled="_isSaved">
+                </TextInput>
+
+            </div>
+
+            <p>Last Name:</p>
+            <div class="mb-3">
+                <TextInput Class="form-control"
+                           @bind-value="_request.LastName"
+                           name="LastName"
+                           Disabled="_isSaved">
+                </TextInput>
+            </div>
+
+            <p>UserName:</p>
+            <div class="mb-3">
+                <TextInput Class="form-control"
+                           @bind-value="_request.UserName"
+                           name="UserName"
+                           Disabled="_isSaved">
+                </TextInput>
+            </div>
+
+            <p>Email:</p>
+            <div class="mb-3">
+                <TextInput Class="form-control"
+                           @bind-value="_request.Email"
+                           name="Email"
+                           Disabled="_isSaved">
+                </TextInput>
+            </div>
+        </EditForm>
+    </BodyTemplate>
+
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideEditProfileModalClick" Type="@ButtonType.Button">Close</Button>
+        <Button Color="ButtonColor.Dark" Type="@ButtonType.Submit" Form="edit-profile-form">Update</Button>
+    </FooterTemplate>
+</Modal>

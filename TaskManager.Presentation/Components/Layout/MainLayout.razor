@@ -1,0 +1,20 @@
+﻿@using BlazorBootstrap
+@using Microsoft.AspNetCore.Components.Authorization
+@using TaskManager.Presentation.Components.TopBar
+@inherits LayoutComponentBase
+
+<div class="page">
+    <AuthorizeView>
+        <main>
+            <NavBar></NavBar>
+
+            <article class="content px-4 mt-4">
+                <div class="container-fluid">
+                    @Body
+                </div>
+            </article>
+        </main>
+    </AuthorizeView>
+</div>
+
+<Toasts @rendermode="InteractiveServer" class="p-3" AutoHide="true" Delay="1000" Placement="ToastsPlacement.BottomRight"/>

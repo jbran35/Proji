@@ -1,0 +1,13 @@
+﻿@using BlazorBootstrap
+@inherits AppComponentBase
+
+<Modal @ref="_completeProjectModal" Title="Complete Project">
+    <BodyTemplate>
+        <p>Are you sure you want to complete this project?</p>
+    </BodyTemplate>
+
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideCompleteProjectModal">Cancel</Button>
+        <Button Color="ButtonColor.Dark" @onclick="OnCompleteProjectClick" disabled="@_isCompleteClicked">Complete</Button>
+    </FooterTemplate>
+</Modal>

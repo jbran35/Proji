@@ -1,0 +1,21 @@
+﻿body {
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f8f9fa;
+    }
+
+    .btn-charcoal {
+        background-color: #495057;
+        border-color: #495057;
+        color: white;
+    }
+
+    .btn-charcoal:hover {
+        background-color: #343a40;
+        border-color: #343a40;
+        color: white;
+    }
+}

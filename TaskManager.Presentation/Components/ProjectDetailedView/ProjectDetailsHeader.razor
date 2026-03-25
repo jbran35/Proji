@@ -1,0 +1,54 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Presentation.Components.Tiles
+
+
+@* Contains the card with the project title, description, todo item counts, as well as the progress graph *@
+<div class="row mb-4">
+    <div class="col-md-6">
+        <Card Class="h-100">
+         
+            @if (!IsLoading)
+            {
+                <div class="position-absolute top-0 end-0 p-2">
+                    <Button Type="@ButtonType.Button" @onclick="OnShowEditProjectModalClick" class="p-0" aria-label="EditProjectButton">
+                        <Icon Name="IconName.PencilSquare" Color="IconColor.Dark" Size="IconSize.x4" />
+                    </Button>
+                </div>
+                
+                <CardBody>
+           
+                    <h4 class="d-flex justify-content-center" style="text-decoration: underline;">@ProjectName</h4>
+                    <h6 class="d-flex justify-content-center text-muted"> @CompleteTodoItems / @TotalTodoItems </h6>
+                    <br />
+                    <p> @ProjectDescription</p>
+                </CardBody>
+            }
+
+        </Card>
+    </div>
+
+    <div class="col-md-6">
+        
+        <Card Class="h-100">
+            <CardBody Class="d-flex justify-content-center">
+            @if (!IsLoading)
+            {
+                <ProgressGraph PercentComplete="@PercentComplete" IsTile="false" />
+            }
+            </CardBody>
+        </Card>
+    </div>
+</div>
+
+@code {
+   
+    #region Parameters
+    [Parameter] public string ProjectName { get; set; } = string.Empty; 
+    [Parameter] public string ProjectDescription { get; set; } = string.Empty;
+    [Parameter] public bool IsLoading { get; set; } = true;
+    [Parameter] public int CompleteTodoItems { get; set; }
+    [Parameter] public int TotalTodoItems { get; set; }
+    [Parameter] public double PercentComplete { get; set; }
+    [Parameter] public EventCallback OnShowEditProjectModalClick { get; set; }
+    #endregion
+}

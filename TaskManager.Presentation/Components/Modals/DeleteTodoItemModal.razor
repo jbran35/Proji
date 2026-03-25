@@ -1,0 +1,13 @@
+﻿@using BlazorBootstrap
+@inherits AppComponentBase
+
+
+<Modal @ref="_deleteModal" Title=Delete>
+    <BodyTemplate>
+        <p> Are you sure you want to delete this task? </p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideDeleteTodoItemModalClick">Cancel</Button>
+        <Button Color="ButtonColor.Dark" @onclick="OnDeleteTodoItemClick" Disabled="@_isDeleteClicked">Delete</Button>
+    </FooterTemplate>
+</Modal>

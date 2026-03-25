@@ -1,0 +1,14 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Presentation.Components.Pages
+
+<Modal @ref="_addTodoItemModal" Title="Add Task" Size="ModalSize.Large">
+    <BodyTemplate>
+        <NewTodoItem @ref="_addTodoItemForm" ProjectId="ProjectId" 
+                 OnShowNewAssigneeModalClick="OnShowNewAssigneeModal"
+                 OnRestoreNewTodoItemModal="RestoreModal"></NewTodoItem>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button id="CancelButton" Color="ButtonColor.Secondary" @onclick="OnHideAddTodoItemModalClick">Cancel</Button>
+        <Button id="SaveTaskButton" Size="ButtonSize.Medium" Color="ButtonColor.Dark" @onclick="OnCreateTodoItemClick" Disabled="@_isSaveClicked" >Save</Button>
+    </FooterTemplate>
+</Modal>

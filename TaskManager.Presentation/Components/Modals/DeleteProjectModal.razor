@@ -1,0 +1,56 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Application.Projects.DTOs.Responses
+@using TaskManager.Presentation.Services
+@inherits AppComponentBase
+
+@inject ApiClientService ApiClientService
+@inject ProjectStateService ProjectStateService
+
+<Modal @ref="_deleteProjectModal" Title=Delete>
+    <BodyTemplate>
+        <p> Are you sure you want to delete this project? </p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideDeleteProjectModalClick">Cancel</Button>
+        <Button Color="ButtonColor.Dark" @onclick="OnDeleteProjectClick" Disabled="@_isDeleteClicked">Delete</Button>
+    </FooterTemplate>
+</Modal>
+
+@code {
+
+    /// <summary>
+    /// Confirmation modal prompting whether the user would like to delete a project and all of its todo items.
+    /// </summary>
+
+    [Parameter] public Guid ProjectId { get; set; }
+
+    private bool _isDeleteClicked; 
+    private Modal _deleteProjectModal = default!;
+
+    public async Task OnShowDeleteProjectModalClick() => await _deleteProjectModal.ShowAsync();
+
+    private async Task OnHideDeleteProjectModalClick() => await _deleteProjectModal.HideAsync();
+
+    private async Task OnDeleteProjectClick()
+    {
+        _isDeleteClicked = true; // Prevents multiple clicks.
+        var client = ApiClientService.GetClient(); 
+        var response = await client.DeleteAsync($"api/projects/{ProjectId}");
+        var result = await response.Content.ReadFromJsonAsync<DeleteProjectResponse>();
+
+        if (!response.IsSuccessStatusCode || result is null)
+        {
+            ToastService.Notify(new(ToastType.Danger, await response.Content.ReadAsStringAsync()));
+            return;
+        }
+
+        if (response.IsSuccessStatusCode)
+        {
+            await ProjectStateService.RemoveProject(result.ProjectId); // Removing project for easy UI updating.
+            ToastService.Notify(new(ToastType.Success, "Project Deleted Successfully!"));
+            await _deleteProjectModal.HideAsync();
+        }
+
+        _isDeleteClicked = false; 
+    }
+}

@@ -1,0 +1,62 @@
+﻿@page "/register"
+@using BlazorBootstrap
+@using TaskManager.Presentation.Components.Layout
+@rendermode InteractiveServer
+@inherits AppComponentBase
+@layout LoginLayout
+
+<title> Register To Create A New Account </title>
+
+<div class="container">
+    <div class="d-flex flex-column align-items-center justify-content-start pt-5 vh-80">
+        <Card Class="w-50">
+            <EditForm Model="_registerModel" OnValidSubmit="RegisterUser">
+                <CardBody>
+                    <div class="text-center">
+
+                        <CardTitle> Register</CardTitle>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input class="form-control" aria-label="Username" @bind="_registerModel.Username" />
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" aria-label="Password" @bind="_registerModel.Password" />
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" aria-label="First Name" @bind="_registerModel.FirstName" />
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" aria-label="Last Name" @bind="_registerModel.LastName" />
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" aria-label="Email" @bind="_registerModel.Email" />
+                    </div>
+                    <br />
+
+                </CardBody>
+
+                <Button Color="ButtonColor.Dark" Type="@ButtonType.Submit" Class="w-100" aria-label="Submit">Register</Button>
+
+            </EditForm>
+        </Card>
+
+        <div class="d-flex justify-content-center align-items-start pt-5">
+            <p> Already have an account? <NavLink href="/login" class="text-primary text-decoration-none fw-bold" aria-label="Login"> Login </NavLink></p>
+        </div>
+    </div>
+</div>   

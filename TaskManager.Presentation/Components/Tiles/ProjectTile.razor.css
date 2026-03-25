@@ -1,0 +1,9 @@
+﻿.project-card {
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
+    border-radius: .5rem;
+}
+
+.project-card:hover {
+    background-color: #f2f2f2 !important;
+}

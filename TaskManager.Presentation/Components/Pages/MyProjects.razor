@@ -1,0 +1,30 @@
+﻿@page "/myprojects"
+@using Microsoft.AspNetCore.Authorization
+@using TaskManager.Presentation.Components.Modals
+@using TaskManager.Presentation.Components.MyProjects.ProjectToolbar
+@attribute [Authorize]
+@inherits AppComponentBase
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<title>My Projects</title>
+<PageTitle>My Projects</PageTitle>
+
+<h3 style="text-align: center;"> My Projects </h3>
+<hr />
+
+<div class="d-flex mb-3 gap-2">
+
+    <SortDropDownMenu OnSortChanged="UpdateSort"></SortDropDownMenu>
+
+    <ProjectSearchBar @bind-ProjectFilter="@_projectFilter"></ProjectSearchBar>
+
+    <AddProjectButton OnAddButtonClicked="OpenAddProjectModal"></AddProjectButton>
+</div>
+
+<AddProjectModal @ref="_addModal"></AddProjectModal>
+
+<ProjectGrid ErrorMessage="@_errorMessage"
+            IsLoading="@_isLoading"
+            Projects="@FilteredProjects"></ProjectGrid> 
+
+<hr class="curved-line">

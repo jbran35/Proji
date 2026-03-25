@@ -1,0 +1,13 @@
+﻿@using BlazorBootstrap
+@inherits AppComponentBase
+
+
+<Modal @ref="_deleteAssigneeModal" Title="Delete Assignee">
+    <BodyTemplate>
+        <p>Are you sure you want to remove <b> @Connection.AssigneeName </b> from your group?</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideDeleteAssigneeModalClick">Cancel</Button>
+        <Button Color="ButtonColor.Dark" @onclick="OnDeleteAssignee" Disabled="@_isDeleteClicked">Delete</Button>
+    </FooterTemplate>
+</Modal>

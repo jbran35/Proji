@@ -1,0 +1,23 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using TaskManager.Presentation.Components.Layout
+@inject NavigationManager NavManager
+@layout LoginLayout
+
+
+@code {
+    /// <summary>
+    /// Simply re-routes the user to the login page upon navigating to the site.
+    /// </summary>
+    private bool _redirected;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_redirected)
+        {
+            _redirected = true;
+            NavManager.NavigateTo("/login");
+        }
+    }
+
+}

@@ -1,0 +1,15 @@
+﻿@using BlazorBootstrap
+
+<Button id="OpenAddProjectModal" aria-label="AddProject" Type="@ButtonType.Button" @onclick="OpenAddProjectModal">
+        <Icon Name="IconName.PlusCircleFill" Size="IconSize.x3" />
+    </Button>
+
+@code{
+
+    [Parameter] public EventCallback OnAddButtonClicked { get; set; }
+
+    private async Task OpenAddProjectModal()
+    {
+        await OnAddButtonClicked.InvokeAsync(); 
+    }
+}

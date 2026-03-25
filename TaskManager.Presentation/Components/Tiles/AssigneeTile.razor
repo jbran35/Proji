@@ -1,0 +1,35 @@
+﻿@using BlazorBootstrap
+@using TaskManager.Application.UserConnections.DTOs
+@using TaskManager.Presentation.Components.Modals
+@rendermode InteractiveServer
+@inherits AppComponentBase
+
+@*The tile that assignees in a user's group are displayed in, when they navigate to the My Group page*@
+ 
+<Card Class="assignee-card">
+            <CardBody Class="d-flex flex-column align-items-center justify-content-center"> 
+
+            <Icon Name="IconName.Person" Size="IconSize.x1" />
+            <p class="mb-0 fw-bold">@Connection.AssigneeName</p>
+            <p class="mb-0 text-muted"> @Connection.AssigneeEmail </p>
+                
+            <div class="position-absolute top-0 end-0 m-2">
+            <Button Id="ShowDeleteAssigneeButton" @onclick="OnShowDeleteAssigneeModal" aria-label="Delete-Assignee">
+                <Icon Name="IconName.Trash" Size="IconSize.x5" />
+            </Button>
+
+            </div>
+            </CardBody>
+    </Card>
+
+<DeleteAssigneeConnectionModal @ref="_deleteAssigneeModal" 
+                               Connection="Connection"/>
+
+@code {
+
+    [Parameter] public required UserConnectionDto Connection { get; init; } 
+
+    private DeleteAssigneeConnectionModal _deleteAssigneeModal = default!;
+
+    private async Task OnShowDeleteAssigneeModal() => await _deleteAssigneeModal.OnShowDeleteAssigneeModalClick();
+}

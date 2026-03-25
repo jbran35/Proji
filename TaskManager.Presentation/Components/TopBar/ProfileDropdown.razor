@@ -1,0 +1,55 @@
+﻿@using BlazorBootstrap
+@using Microsoft.AspNetCore.Components.Authorization
+@using TaskManager.Presentation.Components.Modals
+
+<div class="ms-auto d-flex align-items-center">
+                <AuthorizeView>
+                    <Authorized>
+
+                        <div class="dropdown d-flex align-content-end">
+                            <button id="ProfileOptions" aria-label="ProfileOptions" class="btn btn-link text-light p-0 dropdown-toggle no-caret"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <Icon Name="IconName.PersonCircle" Size="IconSize.x3" />
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg mt-2" style="min-width: 300px;">
+                                <li class="px-3 py-2 border-bottom">
+                                    <div class="fw-bold text-dark">@(FirstName)
+                                        @(LastName)  </div>
+                                    <p class="text-muted small">
+                                        @(Email)
+                                    </p>
+                                </li>
+                                <li><a class="dropdown-item mt-2" @onclick="OnShowEditProfileModal">Update Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <form action="/account/logout" method="post" class="px-3">
+                                    <AntiforgeryToken />
+                                    <button type="submit" class="btn btn-link text-danger p-0 m-0 text-decoration-none small">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </ul>
+                        </div>
+
+                    </Authorized>
+                    <NotAuthorized>
+
+                        <div class="dropdown">
+                            <button class="btn btn-link text-light p-0 dropdown-toggle no-caret"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <Icon Name="IconName.PersonCircle" Size="IconSize.x3" />
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg mt-2" style="min-width: 300px;">
+                                <li><NavLink class="dropdown-item mt-2" href="/login">Login</NavLink></li>
+                                <li><hr class="dropdown-divider"></li>
+                            </ul>
+                        </div>
+                    </NotAuthorized>
+                </AuthorizeView>
+                </div>
+
+ <EditProfileModal @ref="_editProfileModal"> </EditProfileModal>

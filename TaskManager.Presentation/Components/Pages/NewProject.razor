@@ -1,0 +1,22 @@
+﻿@page "/newproject"
+@inherits AppComponentBase
+
+<title>New Project - Add a New Project</title>
+
+
+<EditForm EditContext="@_editContext">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label class="form-label">Title:  <span class="text-danger">*</span></label>
+        <InputText class="form-control" placeholder="My New Project..." @bind-Value="_model.Name" />
+        <ValidationMessage For="@(() => _model.Name)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description:</label>
+        <InputTextArea class="form-control" rows="3" placeholder="Enter Project Description" @bind-Value="_model.Description" />
+    </div>
+
+</EditForm>
+
+<br />
