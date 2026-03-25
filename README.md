@@ -47,7 +47,7 @@ You can run the application through an IDE (Visual Studio / VS Code / Rider) or 
    * Select Multiple startup projects and set both TaskManager.API and TaskManager.Presentation to Start, ensuring the API Project is set to start first.
    * Press F5 or click the green Start button.
     
-#### Using .NET CLI [VideoLink]
+#### Using .NET CLI [[Video]](https://youtu.be/6qtNGp1O4_s)
    * Open two separate terminal windows from the root directory:
   
    * **In Terminal 1:**
