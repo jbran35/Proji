@@ -41,7 +41,7 @@ docker-compose up -d
 ### Run the Application
 You can run the application through an IDE (Visual Studio / VS Code / Rider) or the .NET CLI. 
 
-#### Using an IDE [VideoLink]
+#### Using an IDE [[Video]](https://youtu.be/pPaJ3wLPymQ)
    * Open Proji.sln.
    * Right-click the Solution in Solution Explorer and select Configure Startup Projects.
    * Select Multiple startup projects and set both TaskManager.API and TaskManager.Presentation to Start, ensuring the API Project is set to start first.
