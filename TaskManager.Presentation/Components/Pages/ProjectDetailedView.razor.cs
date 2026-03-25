@@ -55,7 +55,6 @@ namespace TaskManager.Presentation.Components.Pages
                     await ProjectStateService.SetAllProjectDetails(_projectDetails);
                     RefreshProjectDetails(_projectDetails);
                     RecalculateProgress();
-                    ToastService.Notify(new(ToastType.Success, "Loaded Successfully!"));
                 }
             }
 

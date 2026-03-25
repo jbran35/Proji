@@ -16,6 +16,8 @@ namespace TaskManager.Presentation.Components.Pages
         [Inject] protected ProjectSortStateService ProjectSortStateService { get; set; } = default!;
         [Inject] protected AuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
         [Inject] protected ProjectApiService ProjectApiService { get; set; } = default!;
+        [Inject] protected SignalRConnectionService SignalRConnectionService { get; set; } = default!;
+        [Inject] protected WelcomedService WelcomedService { get; set; } = default!;
         #endregion
 
         private bool _isLoading = true;
@@ -26,8 +28,10 @@ namespace TaskManager.Presentation.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            //pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+            await SignalRConnectionService.InitializeConnection();
             ProjectStateService.OnChange += RefreshState;
+            SignalRConnectionService.OnTodoItemUpdated += HandleStateChanged; //Lets the project owner see updates immediately if assignees mark todo items as complete
+
 
             var cachedSort = ProjectSortStateService.GetSortingMethod();
             if (cachedSort is not null)
@@ -39,6 +43,16 @@ namespace TaskManager.Presentation.Components.Pages
             if (authState.User.Identity?.IsAuthenticated == true)
                 await LoadProjects();
         }
+
+        private void HandleStateChanged()
+        {
+            InvokeAsync(async () =>
+            {
+                _hasLoaded = false;
+                await ProjectStateService.ClearProjectTiles(); //Pings ProjectStateService.OnChange
+            });
+        }
+
 
         private async Task LoadProjects()
         {
@@ -60,7 +74,11 @@ namespace TaskManager.Presentation.Components.Pages
                 _projectsList = await ProjectApiService.GetMyProjectsAsync();
                 await ProjectStateService.SetProjectTiles(_projectsList);
 
-                ToastService.Notify(new(ToastType.Success, "Welcome!"));
+                if (WelcomedService.GetWelcomedStatus() == false)
+                {
+                    ToastService.Notify(new(ToastType.Success, "Welcome!"));
+                    WelcomedService.MarkWelcomed();
+                }
             }
 
             catch (NullReferenceException ex)
@@ -106,16 +124,16 @@ namespace TaskManager.Presentation.Components.Pages
                     _projectsList = projectTiles;
                     StateHasChanged();
                 }
+
+                else
+                {
+                    await LoadProjects();
+                    StateHasChanged();
+                }
             });
         }
 
         private List<ProjectTileDto> _projectsList = [];
-        //private IEnumerable<ProjectTileDto> FilteredProjects =>
-        //    ApplySorting(projectsList
-        //        .Where(m => string.IsNullOrEmpty(projectFilter)
-        //        || m.Title!.Contains(projectFilter, StringComparison.OrdinalIgnoreCase)))
-        //        .Skip(pagination.ItemsPerPage * pagination.CurrentPageIndex)
-        //        .Take(pagination.ItemsPerPage);
 
         private IEnumerable<ProjectTileDto> FilteredProjects =>
            ApplySorting(_projectsList
@@ -123,7 +141,6 @@ namespace TaskManager.Presentation.Components.Pages
                || m.Title.Contains(_projectFilter, StringComparison.OrdinalIgnoreCase)));
 
         private string _projectFilter = string.Empty;
-        //private readonly PaginationState pagination = new() { ItemsPerPage = 12 };
 
         private void UpdateSort(SortOption option)
         {

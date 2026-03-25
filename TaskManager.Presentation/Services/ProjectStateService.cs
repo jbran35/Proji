@@ -38,7 +38,7 @@ namespace TaskManager.Presentation.Services
         #region Getters
         public async Task<ProjectDetailedViewDto?> GetProjectDetails(Guid projectId)
         {
-            var original = _cache.Get<ProjectDetailedViewDto>(await GetDetailsKey(projectId));
+           var original = _cache.Get<ProjectDetailedViewDto>(await GetDetailsKey(projectId));
             return original is not null ? Clone(original) : null;
         }
 
@@ -262,8 +262,6 @@ namespace TaskManager.Presentation.Services
                     var newTile = project.ToProjectTileDto();
                     await SetProjectTile(newTile, false);
                 }
-
-                NotifyStateChanged(); 
             }
         }
         #endregion

@@ -44,6 +44,7 @@ namespace TaskManager.Presentation.Components.Modals
             {
                 ToastService.Notify(new(ToastType.Success, "Task Deleted Successfully!"));
                 await ProjectStateService.RemoveTodoItem(ProjectId, TodoItemId); // Updating State Service for easy UI updating.
+                StateHasChanged();
                 await _deleteModal.HideAsync();
             }
 

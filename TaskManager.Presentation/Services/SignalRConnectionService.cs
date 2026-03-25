@@ -49,8 +49,6 @@ namespace TaskManager.Presentation.Services
             {
                 try
                 {
-                    //var handlers = OnTodoItemUpdated?.GetInvocationList().Cast<Func<Task>>();
-
                     OnTodoItemUpdated?.Invoke();
                     return Task.CompletedTask;
                 }
@@ -71,7 +69,6 @@ namespace TaskManager.Presentation.Services
                     Console.WriteLine($"Error connecting: {ex.Message}");
                 }
             }
-            
         }
         #endregion
     }

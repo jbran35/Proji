@@ -39,6 +39,7 @@ builder.Services.AddScoped<TokenProviderService>();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<AuthHeaderHandler>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddScoped<WelcomedService>();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

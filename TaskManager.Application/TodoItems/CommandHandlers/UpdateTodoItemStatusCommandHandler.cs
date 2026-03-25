@@ -89,7 +89,13 @@ namespace TaskManager.Application.TodoItems.CommandHandlers
                     await _cache.RemoveAsync(assignedItemsKey, CancellationToken.None);
 
                     if (userIsAssignee)
+                    {
+                        Console.WriteLine("Sending Update");
+                        var ownerTilesKey = CacheKeys.ProjectTiles(todoItem.OwnerId);
+                        await _cache.RemoveAsync(ownerTilesKey, CancellationToken.None);
                         await _updateService.NotifyTodoItemUpdated(todoItem.OwnerId.ToString());
+
+                    }
 
                     if (userIsOwner)
                         await _updateService.NotifyTodoItemUpdated(todoItem.AssigneeId!.Value.ToString());

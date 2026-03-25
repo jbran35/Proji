@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using TaskManager.Application.Interfaces;
 using TaskManager.Application.Projects.Commands;
 using TaskManager.Application.Projects.Events;
 using TaskManager.Application.TodoItems.DTOs;
@@ -20,12 +21,13 @@ namespace TaskManager.Application.Projects.CommandHandlers
     /// <param name="logger"></param>
     /// <param name="mediator"></param>
     public class AddTodoItemCommandHandler(IUnitOfWork unitOfWork, UserManager<User> userManager,
-        ILogger<AddTodoItemCommandHandler> logger, IMediator mediator) : IRequestHandler<AddTodoItemCommand, Result<TodoItemEntry>>
+        ILogger<AddTodoItemCommandHandler> logger, IMediator mediator, ITodoItemUpdateNotificationService notificationService) : IRequestHandler<AddTodoItemCommand, Result<TodoItemEntry>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly UserManager<User> _userManager = userManager;
         private readonly ILogger<AddTodoItemCommandHandler> _logger = logger;
-        private readonly IMediator _mediator = mediator; 
+        private readonly IMediator _mediator = mediator;
+        private readonly ITodoItemUpdateNotificationService _notificationService = notificationService;
         public async Task<Result<TodoItemEntry>> Handle(AddTodoItemCommand command, CancellationToken cancellationToken)
         {
             User? user = await _userManager.FindByIdAsync(command.UserId.ToString());
@@ -99,7 +101,6 @@ namespace TaskManager.Application.Projects.CommandHandlers
                 //Event ensures that assignee's My Assigned TodoItems list is removed from Redis Cache & that they see the new item immediately.
                 var assignedTodoItemCreatedEvent = new AssignedTodoItemCreatedEvent(assigneeId); 
                 await _mediator.Publish(assignedTodoItemCreatedEvent, cancellationToken);
-
                 return Result<TodoItemEntry>.Success(listEntryDto);
             }
 

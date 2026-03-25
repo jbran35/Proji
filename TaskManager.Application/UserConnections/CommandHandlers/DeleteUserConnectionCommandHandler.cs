@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using TaskManager.Application.Common;
 using TaskManager.Application.TodoItems.Events;
 using TaskManager.Application.UserConnections.Commands;
 using TaskManager.Application.UserConnections.Events;
@@ -20,12 +22,13 @@ namespace TaskManager.Application.UserConnections.CommandHandlers
     /// <param name="logger"></param>
     /// <param name="mediator"></param>
     public class DeleteUserConnectionCommandHandler(IUnitOfWork unitOfWork, UserManager<User> userManager,
-        ILogger<DeleteUserConnectionCommandHandler> logger, IMediator mediator) : IRequestHandler<DeleteUserConnectionCommand, Result>
+        ILogger<DeleteUserConnectionCommandHandler> logger, IMediator mediator, IDistributedCache cache) : IRequestHandler<DeleteUserConnectionCommand, Result>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly UserManager<User> _userManager = userManager;
         private readonly ILogger<DeleteUserConnectionCommandHandler> _logger = logger;
         private readonly IMediator _mediator = mediator;
+        private readonly IDistributedCache _cache = cache;
         public async Task<Result> Handle(DeleteUserConnectionCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
@@ -52,9 +55,16 @@ namespace TaskManager.Application.UserConnections.CommandHandlers
             {
                 if (taskIdsToUnassign.Count != 0)
                 {
-                    await _unitOfWork.TodoItemRepository.UnassignTasksByIdAsync(taskIdsToUnassign, cancellationToken);
+                    var projectIds = await _unitOfWork.TodoItemRepository.UnassignTasksByIdAsync(taskIdsToUnassign, cancellationToken); // Streamlined unassignment, returns projectIds that need to be cleared from Redis for the owner
                     itemsWereUnassigned = true;
 
+                    if (projectIds is not null && projectIds.Count > 0)
+                    {
+                        foreach (var id in projectIds)
+                        {
+                            _cache.Remove(CacheKeys.ProjectDetailedViews(user.Id, id)); 
+                        }
+                    }
                 }
 
                 _unitOfWork.UserConnectionRepository.Delete(connection);

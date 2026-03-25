@@ -55,7 +55,9 @@ namespace TaskManager.Infrastructure.Repositories
 
             foreach (var todoItem in todoItems)
             {
-                todoItem.AssigneeId = null;
+                todoItem.Unassign();
+                if (!projectIds.Contains(todoItem.ProjectId))
+                    projectIds.Add(todoItem.ProjectId);
             }
             
             return projectIds;

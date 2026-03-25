@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using TaskManager.Application.Common;
+using TaskManager.Application.Interfaces;
 using TaskManager.Application.TodoItems.Commands;
 using TaskManager.Application.TodoItems.Events;
 using TaskManager.Domain.Common;
@@ -20,12 +21,13 @@ namespace TaskManager.Application.TodoItems.CommandHandlers
     /// <param name="cache"></param>
     /// <param name="mediator"></param>
     public class DeleteTodoItemCommandHandler(IUnitOfWork unitOfWork, UserManager<User> userManager, IDistributedCache cache, 
-        IMediator mediator) : IRequestHandler<DeleteTodoItemCommand, Result>
+        IMediator mediator, ITodoItemUpdateNotificationService notificationService) : IRequestHandler<DeleteTodoItemCommand, Result>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly UserManager<User> _userManager = userManager;
         private readonly IDistributedCache _cache = cache;
-        private readonly IMediator _mediator = mediator; 
+        private readonly IMediator _mediator = mediator;
+        private readonly ITodoItemUpdateNotificationService _notificationService = notificationService;
 
         public async Task<Result> Handle(DeleteTodoItemCommand command, CancellationToken cancellationToken)
         {
@@ -57,6 +59,7 @@ namespace TaskManager.Application.TodoItems.CommandHandlers
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 await _cache.RemoveAsync(projectDetailsKey, CancellationToken.None);
+                await _notificationService.NotifyTodoItemUpdated(user.Id.ToString());
 
                 var deletionEvent = new AssignedTodoItemDeletedEvent(assigneeId);
                 await _mediator.Publish(deletionEvent, cancellationToken);

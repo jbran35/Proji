@@ -12,13 +12,13 @@
                        @bind="_email"
                        disabled="@_assigneeFound" />
 
-                <Button Color="ButtonColor.Dark" @onclick="SearchForUser" Disabled="@_assigneeFound"><Icon Name="IconName.Search" /></Button>
+                <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" @onclick="SearchForUser" Disabled="@_assigneeFound" aria-label="SearchForUser"><Icon Name="IconName.Search" /></Button>
 
             </div>
         </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Secondary" @onclick="OnCancelClick">Close</Button>
-        <Button Color="ButtonColor.Dark" @onclick="OnSaveAssigneeModalClick" Disabled="@(!_assigneeFound)">Add</Button>
+        <Button Color="ButtonColor.Secondary" @onclick="OnCancelClick" aria-label="CloseNewAssigneeModal">Close</Button>
+        <Button Color="ButtonColor.Dark" @onclick="OnSaveAssigneeModalClick" aria-label="AddNewAssignee" Disabled="@(!_assigneeFound)">Add</Button>
     </FooterTemplate>
 </Modal>
