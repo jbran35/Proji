@@ -92,8 +92,12 @@ If you wish to connect a database management tool (like SSMS or Azure Data Studi
 * **Architecture/Patterns:** Clean Architecture, CQRS, MediatR, Result Pattern, FluentValidation
 
 ## Viewing API Documentation (Swagger)
-
-## Running Test Suite
+The API Documentation can be viewed either: 
+  * Through the JSON version found in the Docs folder.
+  * By running Proji then entering in a browser URL bar:
+    ```
+    https://localhost:7109/swagger
+    ``` 
 
 ## Architectural Highlights
 
