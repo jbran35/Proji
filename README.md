@@ -22,6 +22,7 @@ Although fully functional as it stands, Proji is likely best suited as an extens
 * [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 * [Docker Desktop (Running)](https://www.docker.com/products/docker-desktop/)
 * [Visual Studio 2022](https://visualstudio.microsoft.com/) / [VS Code](https://code.visualstudio.com/) / [JetBrains Rider](https://www.jetbrains.com/rider/download/)
+* [Git](https://github.com/git-guides/install-git)
 
 
 ### Clone the Repository To Your Machine
@@ -40,33 +41,33 @@ docker-compose up -d
 ### Run the Application
 You can run the application through an IDE (Visual Studio / VS Code / Rider) or the .NET CLI. 
 
-  * #### Using an IDE [VideoLink]
+#### Using an IDE [VideoLink]
    * Open Proji.sln.
    * Right-click the Solution in Solution Explorer and select Configure Startup Projects.
    * Select Multiple startup projects and set both TaskManager.API and TaskManager.Presentation to Start, ensuring the API Project is set to start first.
    * Press F5 or click the green Start button.
     
-  * #### Using .NET CLI [VideoLink]
+#### Using .NET CLI [VideoLink]
    * Open two separate terminal windows from the root directory:
   
-   **In Terminal 1:**
+   * **In Terminal 1:**
       
-   ```
-   dotnet run --project TaskManager.API --launch-profile https
-   ```
+     ```
+     dotnet run --project TaskManager.API --launch-profile https
+     ```
   
-   **In Terminal 2:**
+   * **In Terminal 2:**
   
-   ```
-   dotnet run --project TaskManager.Presentation --launch-profile https
-   ```
+     ```
+     dotnet run --project TaskManager.Presentation --launch-profile https
+     ```
 
-There is no need to manually run Entity Framework update-database commands. On the very first API startup, the DbInitializer.cs service will automatically detect the fresh SQL Docker container, apply all EF Core migrations, and seed the database with a default user and sample projects.
+  * There is no need to manually run Entity Framework update-database commands. On the very first API startup, the DbInitializer.cs service will automatically detect the fresh SQL Docker container, apply all EF Core migrations, and seed the database with a default user and sample projects.
 
-   **In Browser:**
-   ```
-   https://localhost:7146
-   ```
+   * **In Browser:**
+     ```
+     https://localhost:7146
+     ```
 
 ### Configuration & Default Credentials
 By default, the application is configured to run out-of-the-box using the `appsettings.Development.json` profiles. 
