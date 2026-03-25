@@ -52,13 +52,13 @@ You can run the application through an IDE (Visual Studio / VS Code / Rider) or 
    **In Terminal 1:**
       
    ```
-   dotnet run --project TaskManager.API
+   dotnet run --project TaskManager.API --launch-profile https
    ```
   
    **In Terminal 2:**
   
    ```
-   dotnet run --project TaskManager.Presentation
+   dotnet run --project TaskManager.Presentation --launch-profile https
    ```
 
 There is no need to manually run Entity Framework update-database commands. On the very first API startup, the DbInitializer.cs service will automatically detect the fresh SQL Docker container, apply all EF Core migrations, and seed the database with a default user and sample projects.
