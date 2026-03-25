@@ -27,12 +27,10 @@ namespace TaskManager.Presentation.Components.Pages
         private string _errorMessage = string.Empty;
         private SortOption _currentSort;
 
-
         protected override async Task OnInitializedAsync()
         {
             ProjectStateService.OnChange += RefreshState;
             SignalRConnectionService.OnTodoItemUpdated += HandleStateChanged; //Lets the project owner see updates immediately if assignees mark todo items as complete
-
 
             var cachedSort = ProjectSortStateService.GetSortingMethod();
             if (cachedSort is not null)
@@ -49,11 +47,9 @@ namespace TaskManager.Presentation.Components.Pages
         {
             if (firstRender)
             {
-                
                 var isConnected = await SignalRConnectionService.InitializeConnection();
-                if (!isConnected){
+                if (!isConnected)
                     NavManager.NavigateTo("/login");
-                }
             }
         }
 
@@ -65,7 +61,6 @@ namespace TaskManager.Presentation.Components.Pages
                 await ProjectStateService.ClearProjectTiles(); //Pings ProjectStateService.OnChange
             });
         }
-
 
         private async Task LoadProjects()
         {
