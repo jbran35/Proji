@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using TaskManager.Application.TodoItems.Events;
 using TaskManager.Application.UserConnections.Commands;
+using TaskManager.Application.UserConnections.Events;
 using TaskManager.Domain.Common;
 using TaskManager.Domain.Entities;
 using TaskManager.Domain.Enums;
@@ -50,14 +51,18 @@ namespace TaskManager.Application.UserConnections.CommandHandlers
             try
             {
                 if (taskIdsToUnassign.Count != 0)
+                {
+                    await _unitOfWork.TodoItemRepository.UnassignTasksByIdAsync(taskIdsToUnassign, cancellationToken);
                     itemsWereUnassigned = true;
-            
+
+                }
+
                 _unitOfWork.UserConnectionRepository.Delete(connection);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 if (itemsWereUnassigned)
                 {
-                    var deletionEvent = new AssignedTodoItemDeletedEvent(assigneeId);
+                    var deletionEvent = new UserRemovedFromGoupEvent(assigneeId);
                     await _mediator.Publish(deletionEvent, cancellationToken);
                 }
 
