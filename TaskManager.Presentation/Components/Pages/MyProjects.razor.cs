@@ -18,6 +18,8 @@ namespace TaskManager.Presentation.Components.Pages
         [Inject] protected ProjectApiService ProjectApiService { get; set; } = default!;
         [Inject] protected SignalRConnectionService SignalRConnectionService { get; set; } = default!;
         [Inject] protected WelcomedService WelcomedService { get; set; } = default!;
+        [Inject] protected new ILogger<MyProjects> Logger { get; set; } = default!; 
+
         #endregion
 
         private bool _isLoading = true;
@@ -28,7 +30,6 @@ namespace TaskManager.Presentation.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await SignalRConnectionService.InitializeConnection();
             ProjectStateService.OnChange += RefreshState;
             SignalRConnectionService.OnTodoItemUpdated += HandleStateChanged; //Lets the project owner see updates immediately if assignees mark todo items as complete
 
@@ -42,6 +43,18 @@ namespace TaskManager.Presentation.Components.Pages
             var authState = await AuthenticationProvider.GetAuthenticationStateAsync();
             if (authState.User.Identity?.IsAuthenticated == true)
                 await LoadProjects();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                
+                var isConnected = await SignalRConnectionService.InitializeConnection();
+                if (!isConnected){
+                    NavManager.NavigateTo("/login");
+                }
+            }
         }
 
         private void HandleStateChanged()

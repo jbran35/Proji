@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace TaskManager.Presentation.Services
@@ -27,9 +27,9 @@ namespace TaskManager.Presentation.Services
 
             return user.FindFirst("jwt_token")?.Value;
         }
-        public async Task InitializeConnection()
+        public async Task<bool> InitializeConnection()
         {
-            if (_hubConnection is not null) return; 
+            if (_hubConnection is not null) return true; 
 
             _hubConnection = new HubConnectionBuilder()
 
@@ -57,18 +57,18 @@ namespace TaskManager.Presentation.Services
                     return Task.FromException(exception);
                 }
             });
-            while (true)
+
+            try
             {
-                try
-                {
-                    await _hubConnection.StartAsync();
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error connecting: {ex.Message}");
-                }
+                await _hubConnection.StartAsync();
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error connecting: {ex.Message}");
+                return false;
+            }
+
+            return true;
         }
         #endregion
     }
