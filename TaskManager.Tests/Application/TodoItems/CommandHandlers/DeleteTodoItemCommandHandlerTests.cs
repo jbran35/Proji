@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
+using TaskManager.Application.Interfaces;
 using TaskManager.Application.TodoItems.CommandHandlers;
 using TaskManager.Application.TodoItems.Commands;
 using TaskManager.Domain.Entities;
@@ -33,8 +34,9 @@ namespace TaskManager.Tests.Application.TodoItems.CommandHandlers
             _mockUserManager = MockUserManager.GetMockUserManager();
             var mockCache = new Mock<IDistributedCache>();
             var mockMediator = new Mock<IMediator>();
+            var mockNotificationService = new Mock<ITodoItemUpdateNotificationService>();
 
-            _handler = new DeleteTodoItemCommandHandler(_mockUnitOfWork.Object, _mockUserManager.Object, mockCache.Object, mockMediator.Object);
+            _handler = new DeleteTodoItemCommandHandler(_mockUnitOfWork.Object, _mockUserManager.Object, mockCache.Object, mockMediator.Object, mockNotificationService.Object);
         }
 
         [Fact]

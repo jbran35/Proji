@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
+using TaskManager.Application.Interfaces;
 using TaskManager.Application.Projects.CommandHandlers;
 using TaskManager.Application.Projects.Commands;
 using TaskManager.Domain.Entities;
@@ -33,8 +34,9 @@ namespace TaskManager.Tests.Application.Projects.CommandHandlers
             _mockUserManager = MockUserManager.GetMockUserManager();
             var mockMediator = new Mock<IMediator>();
             var mockLogger = new Mock<ILogger<AddTodoItemCommandHandler>>();
+            var mockNotificationService = new Mock<ITodoItemUpdateNotificationService>();
 
-            _handler = new AddTodoItemCommandHandler(_mockUnitOfWork.Object, _mockUserManager.Object, mockLogger.Object, mockMediator.Object);
+            _handler = new AddTodoItemCommandHandler(_mockUnitOfWork.Object, _mockUserManager.Object, mockLogger.Object, mockMediator.Object, mockNotificationService.Object);
         }
 
         [Fact]

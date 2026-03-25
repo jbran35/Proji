@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Moq;
 using TaskManager.Application.UserConnections.CommandHandlers;
@@ -32,7 +33,8 @@ namespace TaskManager.Tests.Application.UserConnections.CommandHandlers
             
             var mockMediator = new Mock<IMediator>();
             var mockLogger = new Mock<ILogger<DeleteUserConnectionCommandHandler>>();
-            _handler = new DeleteUserConnectionCommandHandler(_mockUnitOfWork.Object, _mockUserManager.Object, mockLogger.Object, mockMediator.Object);
+            var mockCache = new Mock<IDistributedCache>();
+            _handler = new DeleteUserConnectionCommandHandler(_mockUnitOfWork.Object, _mockUserManager.Object, mockLogger.Object, mockMediator.Object, mockCache.Object);
         }
 
         [Fact]
