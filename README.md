@@ -63,6 +63,11 @@ You can run the application through an IDE (Visual Studio / VS Code / Rider) or 
 
 There is no need to manually run Entity Framework update-database commands. On the very first API startup, the DbInitializer.cs service will automatically detect the fresh SQL Docker container, apply all EF Core migrations, and seed the database with a default user and sample projects.
 
+   **In Browser:**
+   ```
+   https://localhost:7146
+   ```
+
 ### Configuration & Default Credentials
 By default, the application is configured to run out-of-the-box using the `appsettings.Development.json` profiles. 
 
