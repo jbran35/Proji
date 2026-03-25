@@ -14,7 +14,8 @@ Although fully functional as it stands, Proji is likely best suited as an extens
 
 ## Using Proji For Project Management
 
-[Link To Video]
+![Proji Usage Demo](https://github.com/user-attachments/assets/85fa29d0-920d-41b4-8cad-82dcd5fca7a8)
+
 
 ## Getting Started (Local Set Up Guide)
 
